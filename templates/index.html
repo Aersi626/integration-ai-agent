@@ -27,12 +27,20 @@
                 </label>
                 <textarea id="originalYaml" rows="10" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="Paste your YAML here...">
 - route:
-    id: my-basic-route
+    id: route-45c5
+    nodePrefixId: route-a5b
     from:
-      uri: direct:start
-    steps:
-      - log:
-          message: "Processing message: ${body}"
+      id: from-7f09
+      uri: timer
+      parameters:
+        timerName: test-timer
+        period: "2000"
+        repeatCount: "10"
+      steps:
+        - log:
+            id: log-3fc3
+            message: "**** hello world ****"
+            loggingLevel: INFO
                 </textarea>
             </div>
             <div>
@@ -40,7 +48,7 @@
                     Instructions for Transformation:
                 </label>
                 <textarea id="instructions" rows="10" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="e.g., add a transformation that sets the body to 'Hello from LangGraph!'">
-add a transformation to this YAML file that sets the body to "Hello from LangGraph!"
+change the timer to be every 1 second, change the massage to be "updated hello world".
                 </textarea>
             </div>
         </div>
