@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camel YAML Transformer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-4xl">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Camel YAML Transformer</h1>
+        
+        <div id="loadingIndicator" class="hidden text-center text-blue-600 font-medium mb-4">
+            Processing... Please wait.
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div>
+                <label for="originalYaml" class="block text-gray-700 text-sm font-bold mb-2">
+                    Your Example YAML File:
+                </label>
+                <textarea id="originalYaml" rows="10" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="Paste your YAML here...">
+- route:
+    id: my-basic-route
+    from:
+      uri: direct:start
+    steps:
+      - log:
+          message: "Processing message: ${body}"
+                </textarea>
+            </div>
+            <div>
+                <label for="instructions" class="block text-gray-700 text-sm font-bold mb-2">
+                    Instructions for Transformation:
+                </label>
+                <textarea id="instructions" rows="10" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200" placeholder="e.g., add a transformation that sets the body to 'Hello from LangGraph!'">
+add a transformation to this YAML file that sets the body to "Hello from LangGraph!"
+                </textarea>
+            </div>
+        </div>
+
+        <div class="text-center mb-6">
+            <button id="transformButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none focus:shadow-outline transition duration-300 ease-in-out transform hover:scale-105">
+                Transform YAML
+            </button>
+        </div>
+
+        <div>
+            <label for="transformedYaml" class="block text-gray-700 text-sm font-bold mb-2">
+                Transformed YAML Output:
+            </label>
+            <textarea id="transformedYaml" rows="10" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-gray-700 bg-gray-50 leading-tight focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition duration-200" readonly placeholder="Transformed YAML will appear here..."></textarea>
+        </div>
+
+        <div id="errorMessage" class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg" role="alert">
+            <p class="font-bold">Error:</p>
+            <p id="errorText"></p>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById('transformButton').addEventListener('click', async () => {
+            const originalYaml = document.getElementById('originalYaml').value;
+            const instructions = document.getElementById('instructions').value;
+            const transformedYamlOutput = document.getElementById('transformedYaml');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+
+            // Clear previous output and errors
+            transformedYamlOutput.value = '';
+            errorMessage.classList.add('hidden');
+            errorText.textContent = '';
+
+            // Show loading indicator
+            loadingIndicator.classList.remove('hidden');
+            document.getElementById('transformButton').disabled = true; // Disable button during processing
+
+            try {
+                const response = await fetch('/transform_yaml', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ original_yaml: originalYaml, instructions: instructions }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    transformedYamlOutput.value = data.transformed_yaml;
+                } else {
+                    errorMessage.classList.remove('hidden');
+                    errorText.textContent = data.error || 'Unknown error occurred.';
+                }
+            } catch (error) {
+                errorMessage.classList.remove('hidden');
+                errorText.textContent = `Network or unexpected error: ${error.message}`;
+                console.error('Fetch error:', error);
+            } finally {
+                loadingIndicator.classList.add('hidden');
+                document.getElementById('transformButton').disabled = false; // Re-enable button
+            }
+        });
+    </script>
+</body>
+</html>

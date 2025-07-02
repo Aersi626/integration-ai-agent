@@ -7,3 +7,6 @@ langchain_ollama
 faiss-cpu
 langgraph
 langfuse
+flask
+flask-cors
+tqdm
