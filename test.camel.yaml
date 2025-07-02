@@ -1,0 +1,15 @@
+- route:
+    id: route-45c5
+    nodePrefixId: route-a5b
+    from:
+      id: from-7f09
+      uri: timer
+      parameters:
+        timerName: test-timer
+        period: "2000"
+        repeatCount: "10"
+      steps:
+        - log:
+            id: log-3fc3
+            message: "**** hello world ****"
+            loggingLevel: INFO

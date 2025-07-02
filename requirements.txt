@@ -1,0 +1,9 @@
+numpy
+pandas
+requests
+PyYAML
+langchain-community
+langchain_ollama
+faiss-cpu
+langgraph
+langfuse
