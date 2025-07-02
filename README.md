@@ -126,20 +126,7 @@ After running Python script:
 .
 ├── data/
 │   └── DSL_example.txt
-├── rag_pipeline_with_langfuse.py
 ├── docker-compose.yml            # (From Langfuse repo)
-└── my-camel-karavan-project/
-├── src/
-│   └── main/
-│       └── resources/
-│           └── camel/
-│               └── timer-hello-world.yaml
+├── ai_agent.py
+├── requirements.txt
 └── ...
-
-
-## Troubleshooting
-
-* **`git : The term 'git' is not recognized...`**: Install Git or ensure it's in PATH. Restart terminal.
-* **`HTTPConnectionPool(host='localhost', port=7000): Max retries exceeded...`**: Python script is connecting to wrong Langfuse port. Verify `LANGFUSE_HOST` is `http://localhost:3000` in `rag_pipeline_with_langfuse.py` and run the saved version.
-* **`No runtime configured! Create application!` (in Karavan)**: Create Karavan application, place YAML in `src/main/resources/camel/`, open project folder in VS Code, ensure Camel JBang is installed.
-* **Traces not appearing in Langfuse UI**: Check Docker container health, API keys, `LANGFUSE_HOST`, `langfuse_handler.client.flush()`, and Python script logs.
